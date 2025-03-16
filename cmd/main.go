@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"ipcalc/internal/handlers"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +17,7 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	router.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
 
-	router.HandleFunc("GET /", getIndex)
+	router.HandleFunc("GET /", handlers.Index)
 
 	srv := &http.Server{
 		Addr:    ":8000",
@@ -47,8 +47,4 @@ func main() {
 		log.Fatalf("Server Shutdown Failed:%+v", err)
 	}
 	log.Print("Server Exited Properly")
-}
-
-func getIndex(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello")
 }
