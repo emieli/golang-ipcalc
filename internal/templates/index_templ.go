@@ -8,7 +8,9 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Hello(name string) templ.Component {
+import "net/netip"
+
+func Prefix(prefix netip.Prefix) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +31,49 @@ func Hello(name string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"/static/css/style.css\" rel=\"stylesheet\"></head><body class=\"flex flex-col h-full bg-slate-500\"><div class=\"mx-auto max-w-md overflow-hidden rounded-xl bg-white shadow-md md:max-w-2xl\"><div class=\"md:flex\"><div class=\"md:shrink-0\"><img class=\"h-48 w-full object-cover md:h-full md:w-48\" alt=\"Modern building architecture\"></div><div class=\"p-8\"><div class=\"text-sm font-semibold tracking-wide text-indigo-500 uppercase\">Company retreats</div><a href=\"#\" class=\"mt-1 block text-lg leading-tight font-medium text-black hover:underline\">Incredible accommodation for your team</a><p class=\"mt-2 text-gray-500\">Looking to take your team away on a retreat to enjoy awesome food and take in some sunshine? We have a list of places to do just that.</p></div></div></div></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div></div><div class=\"h-24 p-4 text-center bg-white rounded\">IP: ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(prefix.Addr().String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/templates/index.templ`, Line: 8, Col: 30}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func Hello(name string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<html><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link href=\"/static/css/style.css\" rel=\"stylesheet\"><script src=\"/static/js/htmx.min.js\"></script></head><body class=\"bg-stone-700\"><div id=\"main\" class=\"grid content-center grid-cols-1 md:grid-cols-3 h-1/2 justify-evenly\"><div></div><form class=\"px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md\"><input autocomplete=\"off\" class=\"w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline\" hx-post=\"/prefix\" hx-target=\"#output\" hx-swap=\"innerHTML\" name=\"prefix\" type=\"text\" value=\"1.2.3.4/24\"></form><div></div></div><div id=\"output\" class=\"grid content-center grid-cols-1 md:grid-cols-3 justify-evenly\"></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

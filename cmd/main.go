@@ -18,6 +18,7 @@ func main() {
 	router.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
 
 	router.HandleFunc("GET /", handlers.Index)
+	router.HandleFunc("POST /prefix", handlers.Prefix)
 
 	srv := &http.Server{
 		Addr:    ":8000",
