@@ -30,7 +30,7 @@ templ Hello(name string) {
 	</html>
 }
 
-templ Prefix(address string, network string, broadcast string) {
+templ Prefix4(address string, network string, broadcast string) {
 	<div></div>
 	<div class="pt-8 text-center bg-white rounded ">
 		Network: { network }
@@ -38,6 +38,19 @@ templ Prefix(address string, network string, broadcast string) {
 		Address: { address }
 		<br/>
 		Broadcast: { broadcast }
+		<br/>
+	</div>
+	<div></div>
+}
+
+templ Prefix6(address string, first string, last string) {
+	<div></div>
+	<div class="pt-8 text-center bg-white rounded ">
+		First IP: { first }
+		<br/>
+		Your IP: { address }
+		<br/>
+		Last IP: { last }
 		<br/>
 	</div>
 	<div></div>
