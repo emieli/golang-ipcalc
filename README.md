@@ -30,7 +30,7 @@ chmod +x tailwindcss
 ./tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch
 ```
 
-# Build & Run
+# Build & Run locally
 > https://hub.docker.com/repository/docker/golle/ipcalc/general
 
 ```
@@ -38,3 +38,64 @@ docker build . -t golle/ipcalc --target production
 docker run -p 8000:8000 golle/ipcalc
 ```
 *You may need to run **docker login** first*
+
+# Deploy to Kubernetes
+We create a deployment/service file and apply it using kubectl.
+
+## golang-ipcalc.yaml:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-ipcalc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      ipcalc: web
+  template:
+    metadata:
+      labels:
+        ipcalc: web
+    spec:
+      containers:
+        - name: ipcalc
+          image: golle/ipcalc
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ipcalc-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    ipcalc: web
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30001
+```
+
+Apply the file on your kubernetes cluster:
+```
+root@k3s-1:~# kubectl apply -f golang-ipcalc.yaml 
+deployment.apps/golang-ipcalc configured
+service/ipcalc-entrypoint unchanged
+
+root@k3s-1:~# kubectl get deployments
+NAME            READY   UP-TO-DATE   AVAILABLE   AGE
+golang-ipcalc   1/1     1            1           49m
+
+root@k3s-1:~# kubectl get pods
+NAME                            READY   STATUS    RESTARTS   AGE
+golang-ipcalc-c4d9bdb58-n2wkv   1/1     Running   0          46m
+
+root@k3s-1:~# kubectl get services
+NAME                TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+ipcalc-entrypoint   NodePort    10.43.99.25   <none>        8000:30001/TCP   50m
+kubernetes          ClusterIP   10.43.0.1     <none>        443/TCP          18h
+```
+*You can now reach the service on the kubernetes <IP-address>:30001*
