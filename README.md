@@ -39,6 +39,12 @@ docker run -p 8000:8000 golle/ipcalc
 ```
 *You may need to run **docker login** first*
 
+# Test
+Run this command to run tests:
+```
+$ go test ./...
+```
+
 # Deploy to Kubernetes
 We create a deployment/service file and apply it using kubectl.
 
