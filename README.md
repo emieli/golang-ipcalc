@@ -29,3 +29,9 @@ mv tailwindcss-linux-x64 tailwindcss
 chmod +x tailwindcss
 ./tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch
 ```
+
+# Build & Run
+```
+docker build . -t ipcalc --target production
+docker run -p 8000:8000 ipcalc
+```
