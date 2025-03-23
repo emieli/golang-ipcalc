@@ -1,4 +1,25 @@
+# Wat Dis?
+As a network engineer I often find myself frustrated that the first page search results for "IP Calculator" are all bad. By bad I mean that they either:
+- use deprecated classful IPv4 that died in the 1990's
+- require you to enter IP-address and subnet separately
+- fill the page with ads or other monetization junk
+
+So, as a learning experience, I figured I would build my own IP-calculator website. This is the result:
+
+![alt text](webpage.png)  
+*You specify the IP-address and what subnet it lives in, the webpage give you the network and broadcast address.*
+
+I host the website here: https://ipcalc.golle.org/
+
+# Architecture
+This webpage is built using the GOTTH stack, which include:
+- **Golang** - net/http standard library
+- **Go Templ** - HTML templates
+- **Tailwind** - CSS framework
+- **HTMX** - Javascript framework
+
 # Dev
+Templ and Tailwind both have binaries (programs) that we can keep running in the background, dynamically re-generating the output files while during development. To hot-reload the Golang web server I use **wgo** as I couldn't get **air** to work correctly. With these three programs running in the background, the relevant files are automatically updated. Likewise, the web server is automatically restarted when it detects changes, so I can quickly see the changes when I refresh my browser.
 
 ## Wgo
 > https://github.com/bokwoon95/wgo
