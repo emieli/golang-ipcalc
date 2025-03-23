@@ -11,19 +11,20 @@ templ Hello(name string) {
 		<body class="bg-stone-700">
 			<div id="main" class="grid content-center grid-cols-1 sm:grid-cols-3 pt-30 justify-">
 				<div></div>
-				<form class="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md ring-offset-8">
+				<div class="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md ring-offset-8">
 					<input
 						autocomplete="off"
 						class="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
 						hx-post="/prefix"
 						hx-target="#output"
 						hx-swap="innerHTML"
+						hx-trigger="change, submit"
 						name="prefix"
 						type="text"
 						placeholder="1.2.3.4/24 or 2000::/3"
 					/>
 					<div id="output" class="pt-10"></div>
-				</form>
+				</div>
 				<div></div>
 			</div>
 		</body>
