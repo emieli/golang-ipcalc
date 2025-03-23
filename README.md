@@ -60,14 +60,14 @@ spec:
         ipcalc: web
     spec:
       containers:
-        - name: ipcalc
+        - name: golang-ipcalc
           image: golle/ipcalc
           imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ipcalc-entrypoint
+  name: golang-ipcalc
   namespace: default
 spec:
   type: NodePort
