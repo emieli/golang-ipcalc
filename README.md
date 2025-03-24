@@ -51,6 +51,12 @@ chmod +x tailwindcss
 ./tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch
 ```
 
+# Test
+Run this command to run tests:
+```
+$ go test ./...
+```
+
 # Build & Run locally
 > https://hub.docker.com/repository/docker/golle/ipcalc/general
 
@@ -60,15 +66,13 @@ docker run -p 8000:8000 golle/ipcalc
 ```
 *You may need to run **docker login** first*
 
-# Test
-Run this command to run tests:
-```
-$ go test ./...
-```
-
 # Deploy to Kubernetes
-We create a deployment/service file and apply it using kubectl.
+We need to push the docker image to some docker registry, in this case Docker Hub:
+```
+$ docker push golle/ipcalc
+```
 
+On our kubernetes node, we create a deployment/service file and apply it using kubectl:
 ## golang-ipcalc.yaml:
 ```yaml
 apiVersion: apps/v1
