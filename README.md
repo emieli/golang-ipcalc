@@ -130,3 +130,9 @@ ipcalc-entrypoint   NodePort    10.43.99.25   <none>        8000:30001/TCP   50m
 kubernetes          ClusterIP   10.43.0.1     <none>        443/TCP          18h
 ```
 *You can now reach the service on the kubernetes <IP-address>:30001*
+
+To update the deployment when new version is released:
+```
+root@k3s-1:~# kubectl rollout restart deployment/golang-ipcalc
+deployment.apps/golang-ipcalc restarted
+```
