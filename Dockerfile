@@ -1,24 +1,5 @@
 FROM golang:1.24.1-bookworm AS base
-
-# # Development stage
-# # =============================================================================
-# # Create a development stage based on the "base" image
-# FROM base AS development
-
-# # Change the working directory to /app
-# WORKDIR /app
-
-# # Install the air CLI for auto-reloading
-# RUN go install github.com/air-verse/air@latest
-
-# # Copy the go.mod and go.sum files to the /app directory
-# COPY go.mod go.sum ./
-
-# # Install dependencies
-# RUN go mod download
-
-# # Start air for live reloading
-# CMD ["air"]
+LABEL org.opencontainers.image.source=https://github.com/emieli/golang-ipcalc
 
 # Builder stage
 # =============================================================================
@@ -29,7 +10,7 @@ FROM base AS builder
 WORKDIR /build
 
 # Copy the go.mod and go.sum files to the /build directory
-COPY go.mod go.sum cmd/main.go .
+COPY go.mod go.sum ipcalc.go .
 
 # Install dependencies
 RUN go mod download
