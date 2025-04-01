@@ -9,6 +9,7 @@ import (
 	"math"
 	"net/http"
 	"net/netip"
+	"strconv"
 	"strings"
 )
 
@@ -31,12 +32,12 @@ func Prefix(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		address, first, last string
+		address, first, last, hosts string
 	)
 
 	if prefix.Addr().Is4() {
-		address, first, last = prefix4(prefix)
-		err = templates.Prefix4(address, first, last).Render(r.Context(), w)
+		address, first, last, hosts = prefix4(prefix)
+		err = templates.Prefix4(address, first, last, hosts).Render(r.Context(), w)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Error rendering template", http.StatusInternalServerError)
@@ -55,7 +56,7 @@ func Prefix(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func prefix4(prefix netip.Prefix) (address string, network string, broadcast string) {
+func prefix4(prefix netip.Prefix) (address, network, broadcast, hosts string) {
 
 	address = prefix.Addr().String()
 	hostBits := 32 - uint32(prefix.Bits())
@@ -84,13 +85,16 @@ func prefix4(prefix netip.Prefix) (address string, network string, broadcast str
 	broadcastAddr := netip.AddrFrom4([4]byte(broadcastAsSlice.Bytes()))
 	broadcast = broadcastAddr.String()
 
+	// Hosts
+	hosts = strconv.Itoa(int(math.Pow(2, float64(hostBits)) - 2))
+
 	return
 }
 
 // Find first and last address in subnet.
 // IPv6 addresses are 128 bits long, but largest int in Golang is uint64, so we have to split
 // the address into a top and bottom part that are processed individually.
-func prefix6(prefix netip.Prefix) (address string, first string, last string) {
+func prefix6(prefix netip.Prefix) (address, first, last string) {
 
 	address = prefix.Addr().String()
 

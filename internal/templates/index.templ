@@ -32,7 +32,7 @@ templ Hello(name string) {
 	</html>
 }
 
-templ Prefix4(address string, network string, broadcast string) {
+templ Prefix4(address, network, broadcast, hosts string) {
 	<div></div>
 	<table class="w-full">
 		<tr class="bg-white border-gray-200">
@@ -57,6 +57,14 @@ templ Prefix4(address string, network string, broadcast string) {
 			</th>
 			<td class="text-lg font-semibold text-black">
 				{ broadcast }
+			</td>
+		</tr>
+		<tr class="bg-white">
+			<th scope="row" class="text-lg font-medium text-gray-900 whitespace-nowrap">
+				Hosts	
+			</th>
+			<td class="text-lg font-semibold text-black">
+				{ hosts }
 			</td>
 		</tr>
 	</table>
