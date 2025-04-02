@@ -10,11 +10,12 @@ func TestPrefix4(t *testing.T) {
 	if err != nil {
 		t.Errorf("parse prefix: %q", err)
 	}
-	gotAddress, gotNetwork, gotBroadcast := prefix4(prefix)
+	gotAddress, gotNetwork, gotBroadcast, gotHosts := prefix4(prefix)
 
 	expectedAddress := "1.2.3.4"
 	expectedNetwork := "1.2.3.0"
 	expectedBroadcast := "1.2.3.255"
+	expectedHosts := "254"
 
 	if gotAddress != expectedAddress {
 		t.Errorf("expected %q but got %q", expectedAddress, gotAddress)
@@ -24,6 +25,9 @@ func TestPrefix4(t *testing.T) {
 	}
 	if gotBroadcast != expectedBroadcast {
 		t.Errorf("expected %q but got %q", expectedBroadcast, gotBroadcast)
+	}
+	if gotHosts != expectedHosts {
+		t.Errorf("expected %q but got %q", gotHosts, expectedHosts)
 	}
 }
 
