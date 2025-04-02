@@ -1,5 +1,4 @@
 tailwindcss
 templ
 tmp/
-internal/templates/*.go
 internal/templates/*.txt
