@@ -25,9 +25,7 @@ func Prefix(w http.ResponseWriter, r *http.Request) {
 	input = strings.TrimSpace(input)
 	prefix, err := netip.ParsePrefix(input)
 	if err != nil {
-		log.Println(err)
-		msg := fmt.Sprintf("invalid prefix %v", err)
-		http.Error(w, msg, http.StatusBadRequest)
+		fmt.Fprintf(w, "<b>invalid prefix<b>")
 		return
 	}
 
