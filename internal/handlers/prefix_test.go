@@ -32,15 +32,16 @@ func TestPrefix4(t *testing.T) {
 }
 
 func TestPrefix6(t *testing.T) {
-	prefix, err := netip.ParsePrefix("2001::/3")
+	prefix, err := netip.ParsePrefix("2001::/33")
 	if err != nil {
 		t.Errorf("parse prefix: %q", err)
 	}
-	gotAddress, gotFirst, gotLast := prefix6(prefix)
+	gotAddress, gotFirst, gotLast, got64s := prefix6(prefix)
 
 	expectedAddress := "2001::"
-	expectedFirst := "2000::"
-	expectedLast := "3fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"
+	expectedFirst := "2001::"
+	expectedLast := "2001:0:7fff:ffff:ffff:ffff:ffff:ffff"
+	expected64s := "2B"
 
 	if gotAddress != expectedAddress {
 		t.Errorf("expected %q but got %q", expectedAddress, gotAddress)
@@ -50,5 +51,8 @@ func TestPrefix6(t *testing.T) {
 	}
 	if gotLast != expectedLast {
 		t.Errorf("expected %q but got %q", expectedLast, gotLast)
+	}
+	if got64s != expected64s {
+		t.Errorf("expected %q but got %q", got64s, expected64s)
 	}
 }

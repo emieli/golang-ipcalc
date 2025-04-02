@@ -32,7 +32,7 @@ func Prefix(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		address, first, last, hosts string
+		address, first, last, hosts, sixty4s string
 	)
 
 	if prefix.Addr().Is4() {
@@ -46,8 +46,8 @@ func Prefix(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if prefix.Addr().Is6() {
-		address, first, last = prefix6(prefix)
-		err = templates.Prefix6(address, first, last).Render(r.Context(), w)
+		address, first, last, sixty4s = prefix6(prefix)
+		err = templates.Prefix6(address, first, last, sixty4s).Render(r.Context(), w)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Error rendering template", http.StatusInternalServerError)
@@ -86,7 +86,7 @@ func prefix4(prefix netip.Prefix) (address, network, broadcast, hosts string) {
 	broadcast = broadcastAddr.String()
 
 	// Hosts
-	hosts = strconv.Itoa(int(math.Pow(2, float64(hostBits)) - 2))
+	hosts = shortenInt(int(math.Pow(2, float64(hostBits)) - 2))
 
 	return
 }
@@ -94,7 +94,7 @@ func prefix4(prefix netip.Prefix) (address, network, broadcast, hosts string) {
 // Find first and last address in subnet.
 // IPv6 addresses are 128 bits long, but largest int in Golang is uint64, so we have to split
 // the address into a top and bottom part that are processed individually.
-func prefix6(prefix netip.Prefix) (address, first, last string) {
+func prefix6(prefix netip.Prefix) (address, first, last, sixty4s string) {
 
 	address = prefix.Addr().String()
 
@@ -135,15 +135,35 @@ func prefix6(prefix netip.Prefix) (address, first, last string) {
 		bytes = binary.BigEndian.AppendUint64(bytes, lastAddressAsInt)
 		lastAddr, _ = netip.AddrFromSlice(bytes)
 	} else {
-		hostBits := 64 - prefix.Bits()
-		addressesInSubnet := uint64(math.Pow(2, float64(hostBits)))
+		sixty4Bits := 64 - prefix.Bits()
+		addressesInSubnet := uint64(math.Pow(2, float64(sixty4Bits)))
 		lastAddressAsInt := top + addressesInSubnet - 1
 
 		bytes = binary.BigEndian.AppendUint64(bytes, lastAddressAsInt)
 		bytes = binary.BigEndian.AppendUint64(bytes, math.MaxUint64)
 		lastAddr, _ = netip.AddrFromSlice(bytes)
+		sixty4s = shortenInt(int(math.Pow(2, float64(sixty4Bits))))
 	}
 	last = lastAddr.String()
 
 	return
+}
+
+// Summarize 65535 to 65k, 1048123 to 1M, etc
+func shortenInt(number int) string {
+	num := []byte(strconv.Itoa(number))
+	if len(num) > 11 {
+		return ""
+	}
+	if len(num) > 9 {
+		return fmt.Sprintf("%sB", string(num[:len(num)-9]))
+	}
+	if len(num) > 6 {
+		return fmt.Sprintf("%sM", string(num[:len(num)-6]))
+	}
+	if len(num) > 3 {
+		return fmt.Sprintf("%sk", string(num[:len(num)-3]))
+	}
+	return strconv.Itoa(number)
+
 }
