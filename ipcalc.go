@@ -17,6 +17,7 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	router.Handle("GET /static/", http.StripPrefix("/static/", fileServer))
 
+	router.HandleFunc("GET /favicon.ico", handlers.Favicon)
 	router.HandleFunc("GET /", handlers.Index)
 	router.HandleFunc("POST /prefix", handlers.Prefix)
 

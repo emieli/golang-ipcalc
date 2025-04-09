@@ -15,14 +15,20 @@ import (
 
 func Prefix(w http.ResponseWriter, r *http.Request) {
 
+	// Fetch input from Form, if exist
 	if err := r.ParseForm(); err != nil {
 		log.Println(err)
 		http.Error(w, "error", http.StatusInternalServerError)
 		return
 	}
-
 	input := r.PostForm.Get("prefix")
 	input = strings.TrimSpace(input)
+
+	// Fetch form from URL, if exist and not in form
+	if input == "" {
+		input, _ = strings.CutPrefix(r.URL.String(), "/")
+	}
+
 	prefix, err := netip.ParsePrefix(input)
 	if err != nil {
 		fmt.Fprintf(w, "<b>invalid prefix<b>")

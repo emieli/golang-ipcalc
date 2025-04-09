@@ -1,6 +1,6 @@
 package templates
 
-templ Hello(name string) {
+templ Index(prefix string) {
 	<html>
 		<head>
 			<meta charset="UTF-8"/>
@@ -19,10 +19,15 @@ templ Hello(name string) {
 						hx-post="/prefix"
 						hx-target="#output"
 						hx-swap="innerHTML"
-						hx-trigger="change, submit"
+						if prefix == "" {
+							hx-trigger="change, submit"
+						} else {
+							hx-trigger="load, change, submit"
+						}
 						name="prefix"
 						type="text"
 						placeholder="1.2.3.4/24 or 2000::/3"
+						value={ prefix }
 					/>
 					<div id="output" class="pt-10"></div>
 				</div>
@@ -99,16 +104,15 @@ templ Prefix6(address, first, last, sixty4s string) {
 			</td>
 		</tr>
 		if sixty4s != "" {
-		    <tr class="bg-white">
-		    	<th scope="row" class="text-lg font-medium text-gray-900 whitespace-nowrap">
-		    		64s
-		    	</th>
-		    	<td class="text-lg font-semibold text-black">
-		    		{ sixty4s }
-		    	</td>
-		    </tr>
+			<tr class="bg-white">
+				<th scope="row" class="text-lg font-medium text-gray-900 whitespace-nowrap">
+					64s
+				</th>
+				<td class="text-lg font-semibold text-black">
+					{ sixty4s }
+				</td>
+			</tr>
 		}
-
 	</table>
 	<div></div>
 }
